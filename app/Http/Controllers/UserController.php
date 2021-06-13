@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -80,6 +81,7 @@ class UserController extends Controller
 
     public function edit(User $user){
         $data = [
+            'purchases' => Purchase::where('user_id', $user->id)->with(['purchase_details.product', 'user'])->get(),
             'user' => $user,
             'provinces' => $this->getProvince(false),
             'cities' => $this->getCity($user->province, false),

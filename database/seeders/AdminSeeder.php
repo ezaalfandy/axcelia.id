@@ -22,5 +22,12 @@ class AdminSeeder extends Seeder
             'email_verified_at' => now(),
             "password" => Hash::make("password")
         ]);
+
+        DB::table('admins')->insert([
+            "name" => "Admin",
+            "email" => "Admin@axcelia.id",
+            'email_verified_at' => now(),
+            "password" => Hash::make("password")
+        ]);
     }
 }

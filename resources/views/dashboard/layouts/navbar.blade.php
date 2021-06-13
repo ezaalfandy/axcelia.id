@@ -21,18 +21,22 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="userWaitingNotification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="now-ui-icons ui-1_bell-53"></i>
-                      <sup>
-                        <span class="badge badge-danger">{{ count($usersWaitingNotification)}}</span>
-                      </sup>
+                      @if (count($usersWaitingNotification) > 0)
+                        <sup>
+                            <span class="badge badge-danger">{{ count($usersWaitingNotification)}}</span>
+                        </sup>
+                      @endif
                       <p>
                         <span class="d-lg-none d-md-block">User Menunggu</span>
                       </p>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userWaitingNotification">
-                        @foreach ($usersWaitingNotification as $user)
-                            <a class="dropdown-item" href="#">{{ $user->name}}</a>
-                        @endforeach
-                    </div>
+                    @if (count($usersWaitingNotification) > 0)
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userWaitingNotification">
+                            @foreach ($usersWaitingNotification as $user)
+                                <a class="dropdown-item" href="#">{{ $user->name}}</a>
+                            @endforeach
+                        </div>
+                    @endif
                   </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"

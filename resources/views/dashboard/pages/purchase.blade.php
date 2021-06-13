@@ -17,6 +17,7 @@
                                 <td>No</td>
                                 <td>Pembeli</td>
                                 <td>Items</td>
+                                <td>Tanggal Order</td>
                                 <td>Total Biaya</td>
                                 <td></td>
                             </tr>
@@ -24,7 +25,7 @@
                         <tbody>
                             @foreach($purchases as $purchase)
                                 <tr>
-                                <td></td>
+                                    <td></td>
                                     <td>
                                         {{ $purchase->user->name }}<br>
                                         {{ $purchase->user->phone_number}}
@@ -45,6 +46,9 @@
                                         @endforeach
                                     </td>
                                     <td>
+                                        {{ $purchase->formatted_purchase_date}}
+                                    </td>
+                                    <td>
                                         @php
                                             echo 'Rp '.number_format($total_price, 0, ".", ".");
                                         @endphp
@@ -55,16 +59,18 @@
                                             method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-link btn-danger  btn-delete-purchase">Delete</button>
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete-purchase">Delete</button>
                                         </form>
-                                        <button class="btn btn-info btn-link btn-sm"
-                                            onclick="openModalEditPurchase(
-                                                '{{ route('purchase.show', $purchase->id) }}',
-                                                '{{ route('purchase.update', $purchase->id) }}'
-                                            )"
-                                        >
-                                            Edit
-                                        </button>
+                                        <form class="d-inline-block"
+                                            action="{{ route('purchase.confirm', $purchase->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="button" class="btn btn-sm btn-success btn-confirm-purchase">Confirm</button>
+                                        </form>
+                                        <a href="{{ route('purchase.cetak-resi', $purchase->id) }}" target="_blank" class="btn btn-default btn-sm" rel="noopener noreferrer">
+                                            Cetak Resi
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -85,7 +91,7 @@
                 [10, 25, 50, "All"]
             ],
             "columnDefs": [
-                { "width": "10%", "targets": -1 },
+                { "width": "20%", "targets": -1 },
                 {"width": "5%", "targets": 0}
             ],
             responsive: true,
@@ -119,6 +125,24 @@
         })
     });
 
+    $('.btn-confirm-purchase').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        swal({
+            title: 'Apakah Anda Yakin ?',
+            text: "Penjualan dilakukan !",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-info',
+            cancelButtonClass: 'btn btn-default btn-link',
+            confirmButtonText: 'Ya, Jual',
+            buttonsStyling: false
+        }).then(function(result) {
+            if(result.value === true){
+                $(form).submit();
+            }
+        })
+    });
 
     app.setFormValidation('#formInsertPurchase');
 

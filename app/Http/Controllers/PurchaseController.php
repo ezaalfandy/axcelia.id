@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use App\Models\Product;
+use App\Models\User;
 use App\Models\PurchaseDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +118,33 @@ class PurchaseController extends Controller
      */
     public function destroy(Purchase $purchase)
     {
-        //
+        $purchase->delete();
+        return redirect()->back()
+        ->with('success', 'data berhasil dihapus');
+    }
+
+
+    public function confirm(Purchase $purchase)
+    {
+        DB::beginTransaction();
+        $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->get();
+        foreach ($purchase_details as $key => $value) {
+            $product = Product::find($value->product_id);
+            $product->stock -= $value->quantity;
+            $product->save();
+        }
+        $purchase->status = 'complete';
+        $purchase->save();
+        DB::commit();
+
+        return redirect()->back()
+        ->with('success', 'penjualan berhasil');
+    }
+
+    public function cetakResi(Purchase $purchase){
+        $data = [
+            'user' => User::find($purchase->user_id)
+        ];
+        return view('dashboard.print.resi');
     }
 }

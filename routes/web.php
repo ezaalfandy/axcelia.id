@@ -6,6 +6,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('purchase/{purchase}', [PurchaseController::class , 'destroy'])->name('purchase.destroy');
     Route::get('purchase/{purchase}', [PurchaseController::class , 'show'])->name('purchase.show');
     Route::put('purchase/{purchase}', [PurchaseController::class , 'update'])->name('purchase.update');
+    Route::put('confirm-purchase/{purchase}', [PurchaseController::class , 'confirm'])->name('purchase.confirm');
+    Route::get('cetak-resi/{purchase}', [PurchaseController::class , 'cetakResi'])->name('purchase.cetak-resi');
+
+    Route::get('/symlink', function () {
+        Artisan::call('storage:link');
+    });
 });
 
 require __DIR__.'/auth.php';
