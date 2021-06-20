@@ -22,10 +22,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             "password" => Hash::make("password"),
             "phone_number" => 981231213,
-            "province" => "jawa timur",
-            "city" => "kab. Mojokerto",
-            "address" => "puri",
-            "zip_code" => "61363"
+            "status" => 'approved'
         ]);
     }
 }

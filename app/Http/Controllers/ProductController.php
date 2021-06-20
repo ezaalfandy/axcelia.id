@@ -98,12 +98,14 @@ class ProductController extends Controller
             'status'=>'sometimes',
             'brand'=>'sometimes',
             'image'=>'required',
+            'weight'=>'required',
         ]);
 
         $Product = new Product([
             'name' => $name,
             'price' => $request->get('price'),
             'stock' => $request->get('stock'),
+            'weight' => $request->get('weight'),
             'status' => $request->get('status'),
             'brand' => $request->get('brand'),
             'description' => $request->get('description'),

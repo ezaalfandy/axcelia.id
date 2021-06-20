@@ -13,14 +13,10 @@
                             <tr>
                                 <td>No</td>
                                 <td>Name</td>
-                                <td>Email</td>
+                                <td class="not-mobile">Email</td>
                                 <td>Phone Number</td>
-                                <td>Province</td>
-                                <td>City</td>
-                                <td>Zip Code</td>
-                                <td>Address</td>
-                                <td>Status</td>
-                                <td></td>
+                                <td class="not-mobile">Status</td>
+                                <td class="not-mobile"></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,10 +26,6 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone_number }}</td>
-                                    <td>{{ $user->province }}</td>
-                                    <td>{{ $user->city }}</td>
-                                    <td>{{ $user->zip_code }}</td>
-                                    <td>{{ $user->address }}</td>
                                     <td>{{ $user->status }}</td>
                                     <td>
                                         @if ($user->status == 'approved')
@@ -63,17 +55,10 @@
                             @endforeach
                         </tbody>
                     </table>
-
-
-                </div>
-                <div class="card-footer text-muted">
-                    Footer
                 </div>
             </div>
         </div>
     </div>
-
-
 @endsection
 @push('js')
 
@@ -86,7 +71,7 @@
                     [10, 25, 50, "All"]
                 ],
                 "columnDefs": [{
-                        "width": "15%",
+                        "width": "25%",
                         "targets": -1
                     },
                     {

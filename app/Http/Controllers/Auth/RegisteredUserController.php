@@ -58,10 +58,6 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'province' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'zip_code' => 'required|string|max:255',
             'phone_number' => 'required|string|max:255',
         ]);
 
@@ -70,11 +66,7 @@ class RegisteredUserController extends Controller
             'email' => $request->get('email'),
             'password' => Hash::make("password"),
             'phone_number' => $request->get('phone_number'),
-            'province' => $request->get('province'),
-            'city' => $request->get('city'),
-            'zip_code' => $request->get('zip_code'),
-            'address' => $request->get('address'),
         ]);
-        return response()->json(['status' => true], 200);
+        return response()->json(['status' => 'success'], 200);
     }
 }

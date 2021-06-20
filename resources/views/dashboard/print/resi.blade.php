@@ -46,7 +46,17 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h2 class="font-weight-bold">Dari :</h2>
-                                <p>asdasd</p>
+                                <h3>Perum. Mutiara Garden blok C no 1. <br>Kel. Lengkong. Kec. Mojoanyar. <br>Mojokerto</h3>
+                            </div>
+                            <div class="col-md-12">
+                                <h2 class="font-weight-bold">Kepada :</h2>
+                                <h3>
+                                    {{ $user->name}}<br>
+                                    {{ $purchase->address}}<br>
+                                    {{ $purchase->subdistrict.' - '.$purchase->city}}<br>
+                                    {{ $purchase->province}}<br>
+                                    {{ $user->phone_number}}<br>
+                                </h3>
                             </div>
                         </div>
                     </div>

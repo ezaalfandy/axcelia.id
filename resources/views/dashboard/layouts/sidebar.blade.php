@@ -1,9 +1,9 @@
 <div class="sidebar" data-color="primary">
     <div class="logo">
-        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+        <a href="#" class="simple-text logo-mini">
             AX
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+        <a href="#" class="simple-text logo-normal">
             Axcelia
         </a>
         <div class="navbar-minimize">
@@ -17,6 +17,9 @@
         <div class="user">
             <div class="info">
                 <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                    <div class="photo">
+
+                    </div>
                     <span>
                         {{ auth()->user()->name }}
                         <b class="caret"></b>
@@ -114,10 +117,15 @@
                     </ul>
                 </div>
             </li>
-
+            <li @if (Request::segment(1) == 'shopping-cart') class="active" @endif>
+                <a href="{{ route('shopping-cart.index')}}">
+                    <i class="now-ui-icons shopping_cart-simple"></i>
+                    <p>Keranjang</p>
+                </a>
+            </li>
             <li @if (Request::segment(1) == 'purchase-waiting' || Request::segment(1) == 'purchase-complete') class="active" @endif>
                 <a data-toggle="collapse" href="#order" class="collapsed" aria-expanded="false">
-                    <i class="now-ui-icons shopping_cart-simple"></i>
+                    <i class="now-ui-icons shopping_box"></i>
                     <p>
                         Daftar Order <b class="caret"></b>
                     </p>

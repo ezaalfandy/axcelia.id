@@ -17,6 +17,15 @@ class CreatePurchasesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->boolean('self_take')->default(0);
+            $table->string('total_cost', 100);
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('subdistrict')->nullable();
+            $table->string('address')->nullable();
+            $table->string('courier', 100)->nullable();
+            $table->string('courier_cost', 100)->nullable();
+            $table->string('total_weight', 100)->nullable();
             $table->enum('status', ['complete', 'waiting'])->default('waiting');
             $table->timestamps();
         });

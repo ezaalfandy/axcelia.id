@@ -20,10 +20,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone_number');
-            $table->string('province');
-            $table->string('city');
-            $table->string('zip_code');
-            $table->string('address');
             $table->enum('status', ['approved', 'waiting'])->default('waiting');
             $table->rememberToken();
             $table->timestamps();

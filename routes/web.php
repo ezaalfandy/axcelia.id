@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ShoppingCartController;
 use App\Http\Controllers\UserController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,6 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/create-token', [UserController::class, 'getToken']);
-
-
 Route::middleware(['auth'])->group(function () {
     Route::resource('product', ProductController::class);
     Route::post('change-status/{product}', [ProductController::class, 'changeStatus'])->name('product.change-status');
@@ -42,15 +40,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get-city/{province?}', [UserController::class, 'getCity'])->name('user.get-city');
     Route::put('change-status/{user}', [UserController::class, 'changeStatus'])->name('user.change-status');
 
-
-    Route::get('purchase-waiting', [PurchaseController::class , 'index'])->name('purchase.index');
+    Route::resource('purchase', PurchaseController::class)->except('create');
     Route::get('purchase-complete', [PurchaseController::class , 'complete'])->name('purchase.complete');
     Route::delete('purchase/{purchase}', [PurchaseController::class , 'destroy'])->name('purchase.destroy');
-    Route::get('purchase/{purchase}', [PurchaseController::class , 'show'])->name('purchase.show');
-    Route::put('purchase/{purchase}', [PurchaseController::class , 'update'])->name('purchase.update');
+    Route::get('purchase/available-courier/{purchase}', [PurchaseController::class , 'getAvailableCourier'])->name('purchase.available-courier');
+
+
+
     Route::put('confirm-purchase/{purchase}', [PurchaseController::class , 'confirm'])->name('purchase.confirm');
     Route::get('cetak-resi/{purchase}', [PurchaseController::class , 'cetakResi'])->name('purchase.cetak-resi');
 
+    Route::delete('shopping-cart/{shoppingCart}', [ShoppingCartController::class , 'destroy'])->name('shopping-cart.destroy');
+    Route::get('shopping-cart', [ShoppingCartController::class , 'index'])->name('shopping-cart.index');
     Route::get('/symlink', function () {
         Artisan::call('storage:link');
     });

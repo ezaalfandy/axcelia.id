@@ -20,8 +20,7 @@
                                 <td>Name</td>
                                 <td>Price</td>
                                 <td>Stock</td>
-                                <td>Status</td>
-                                <td></td>
+                                <td class="not-mobile"></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,9 +28,8 @@
                                 <tr>
                                     <td></td>
                                     <td>{{ $product->name }}</td>
-                                    <td>{{ $product->price }}</td>
+                                    <td>{{ $product->price_rupiah }}</td>
                                     <td>{{ $product->stock }}</td>
-                                    <td>{{ $product->status }}</td>
                                     <td>
                                         @if ($product->status == 'available')
                                             <form class="d-inline-block" action="{{ route('product.change-status', $product->id) }}"
@@ -40,7 +38,7 @@
                                                 @method('POST')
                                                 <input type="text" class="d-none" value="unavailable" name="status">
                                                 <button type="button"
-                                                    class="btn btn-warning btn-status-product">Non Aktifkan Produk</button>
+                                                    class="btn btn-warning btn-sm btn-status-product">Non Aktifkan Produk</button>
                                             </form>
                                         @elseif($product->status == 'unavailable' || $product->status == 'preorder')
                                             <form class="d-inline-block" action="{{ route('product.change-status', $product->id) }}"
@@ -49,10 +47,10 @@
                                                 @method('POST')
                                                 <input type="text" class="d-none" value="available" name="status">
                                                 <button type="button"
-                                                    class="btn btn-success btn-status-product">Aktifkan Produk</button>
+                                                    class="btn btn-success btn-sm btn-status-product">Aktifkan Produk</button>
                                             </form>
                                         @endif
-                                        <button class="btn btn-info" onclick="openModalEditProduct(
+                                        <button class="btn btn-info btn-sm" onclick="openModalEditProduct(
                                                                 '{{ route('product.show', $product->id) }}',
                                                                 '{{ route('product.update', $product->id) }}'
                                                             )">
@@ -63,7 +61,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
-                                                class="btn btn-danger btn-delete-product">Delete</button>
+                                                class="btn btn-danger btn-sm btn-delete-product">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -123,6 +121,7 @@
                             @error('name')<small class="text-danger">{{ $message }}</small>@enderror
                         </div>
                         @if (Request::segment(1) == 'preorder')
+                            <input type="hidden" name="status" value="preorder">
                             <div class="form-group">
                                 <label for="insert_products_brand">Brand</label>
                                 <div class="form-check form-check-radio pl-0">
@@ -156,6 +155,11 @@
                             <input type="number" name="stock" value="{{ old('stock') }}" id="insert_products_stock"
                                 class="form-control" required="true" min="0" />
                             @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="insert_products_weight">Weight (Gram)</label>
+                            <input type="number" name="weight" value="{{ old('weight') }}" id="insert_products_weight" class="form-control" required="true" min="0"  />
+                             @error('weight')<small class="text-danger">{{ $message }}</small>@enderror
                         </div>
                         <div class="form-group">
                             <label for="insert_products_description">Description</label>
@@ -227,6 +231,11 @@
                             @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
                         </div>
                         <div class="form-group">
+                            <label for="edit_products_weight">Weight (Gram)</label>
+                            <input type="number" name="weight" value="{{ old('weight') }}" id="edit_products_weight" class="form-control" required="true" min="0"  />
+                             @error('weight')<small class="text-danger">{{ $message }}</small>@enderror
+                        </div>
+                        <div class="form-group">
                             <label for="edit_products_description">Description</label>
                             <textarea name="description" id="edit_products_description" class="form-control" cols="30" rows="2"></textarea>
                              @error('brand')<small class="text-danger">{{ $message }}</small>@enderror
@@ -254,12 +263,16 @@
                     [10, 25, 50, "All"]
                 ],
                 "columnDefs": [{
-                        "width": "20%",
+                        "width": "35%",
                         "targets": -1
                     },
                     {
                         "width": "5%",
                         "targets": 0
+                    },
+                    {
+                        "width": "10%",
+                        "targets": 3
                     }
                 ],
                 responsive: true,
@@ -330,8 +343,8 @@
                     $('#formEditProduct [name="price"]').val(data.price);
                     $('#formEditProduct [name="description"]').val(data.description);
                     $('#formEditProduct [name="stock"]').val(data.stock);
+                    $('#formEditProduct [name="weight"]').val(data.weight);
                     $('#formEditProduct').attr('action', $updateUrl);
-
                     $('#formEditProduct .fileinput img').attr('src', '{{ asset('storage/product')}}'+'/'+data.image);
                     $('#modalEditProduct').modal('show');
                 }

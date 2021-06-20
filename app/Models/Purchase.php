@@ -41,4 +41,28 @@ class Purchase extends Model
     {
         return Carbon::parse($this->created_at)->translatedFormat('D, d F Y');;
     }
+
+    /**
+     * Get the total cost
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalCostRupiahAttribute()
+    {
+        return 'Rp '.number_format($this->total_cost, 0, ".", ".");
+    }
+
+
+    /**
+     * Get the courier cost
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCourierCostRupiahAttribute()
+    {
+        return 'Rp '.number_format($this->courier_cost, 0, ".", ".");
+    }
+
 }

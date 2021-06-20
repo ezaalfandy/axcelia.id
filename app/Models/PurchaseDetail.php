@@ -26,8 +26,20 @@ class PurchaseDetail extends Model
      * @param  string  $value
      * @return string
      */
+    public function getTotalPriceRupiahAttribute()
+    {
+        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)), 0, ".", ".");
+    }
+
+
+    /**
+     * Get the total harga
+     *
+     * @param  string  $value
+     * @return string
+     */
     public function getTotalPriceAttribute()
     {
-        return $this->product->price * $this->quantity;
+        return intval($this->product->price) * intval($this->quantity);
     }
 }

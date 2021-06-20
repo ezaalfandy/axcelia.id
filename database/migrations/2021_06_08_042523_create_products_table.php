@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name', 100);
             $table->string('price');
             $table->integer('stock');
+            $table->integer('weight');
             $table->text('image');
             $table->enum('brand', ['Axcelia', 'Mooncarla']);
             $table->string('description', 100)->nullable();

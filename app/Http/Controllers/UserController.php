@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Purchase;
+use App\Models\ShoppingCart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
+    private $api_key = "e7aba1c27611c9bc51b88b2f0c82246a";
+
     public function index($status = NULL){
         if($status == NULL)
         {
@@ -38,42 +42,91 @@ class UserController extends Controller
         return $user->createToken('test');
     }
 
-    public function getProvince($json = true){
-        $data = Storage::get('location/indonesia.json');
-		$array = json_decode($data, true);
+    public function getProvince(){
+        $curl = curl_init();
 
-		$returned = array();
-		foreach ($array as $key => $value) {
-			$returned[] = key($value);
-		}
-		sort($returned);
-        if($json == true){
-            return response()->json($returned, 200);
-        }else{
-            return $returned;
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://pro.rajaongkir.com/api/province",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "key: $this->api_key"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return false;
+        } else {
+            return $response;
         }
     }
 
-	public function getCity($province, $json = true){
+    public function getCity($id_province)
+    {
+        $curl = curl_init();
 
-        $data = Storage::get('location/indonesia.json');
-		$array = json_decode($data, true);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://pro.rajaongkir.com/api/city?province=$id_province",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "key: $this->api_key"
+            ),
+        ));
 
-		$returned = array();
-		foreach ($array as $k => $v) {
-			if(strcasecmp(key($v), $province) == 0){
-				foreach ($array[$k] as $key => $value) {
-					array_push($returned, $value);
-				}
-			}
-		}
-		sort($returned);
-        if($json == true){
-            return response()->json($returned[0], 200);
-        }else{
-            return $returned[0];
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return false;
+        } else {
+            return $response;
         }
-	}
+    }
+
+    public function getSubdistrict($id_city)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?city=$id_city",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "key: $this->api_key"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return false;
+        } else {
+            return $response;
+        }
+    }
 
     public function show(){
 
@@ -82,9 +135,8 @@ class UserController extends Controller
     public function edit(User $user){
         $data = [
             'purchases' => Purchase::where('user_id', $user->id)->with(['purchase_details.product', 'user'])->get(),
-            'user' => $user,
-            'provinces' => $this->getProvince(false),
-            'cities' => $this->getCity($user->province, false),
+            'shopping_carts' => ShoppingCart::where('user_id', $user->id)->with('product')->get(),
+            'user' => $user
         ];
         return view('dashboard.pages.editUser', $data);
     }
@@ -95,20 +147,12 @@ class UserController extends Controller
             'name'=>'required',
             'email'=>'required',
             'phone_number'=>'required',
-            'province'=>'required',
-            'city'=>'required',
-            'zip_code'=>'required',
-            'address'=>'required',
             'status'=>'required',
         ]);
         $newData = array(
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'phone_number' => $request->get('phone_number'),
-            'province' => $request->get('province'),
-            'city' => $request->get('city'),
-            'zip_code' => $request->get('zip_code'),
-            'address' => $request->get('address'),
             'status' => $request->get('status'),
         );
 
