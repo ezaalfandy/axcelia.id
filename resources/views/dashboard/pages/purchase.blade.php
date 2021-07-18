@@ -18,8 +18,8 @@
                                 <td>Pembeli</td>
                                 <td class="not-mobile">Items</td>
                                 <td class="not-mobile">Tanggal Order</td>
-                                <td>Total Biaya</td>
                                 <td>Ekspedisi</td>
+                                <td>Total Biaya</td>
                                 <td class="not-mobile"></td>
                             </tr>
                         </thead>
@@ -33,28 +33,23 @@
                                         {{ $purchase->user->phone_number}}
                                     </td>
                                     <td>
-                                        @php
-                                            $total_price = 0;
-                                        @endphp
                                         @foreach ($purchase->purchase_details as $purchase_detail)
-                                            {{ $purchase_detail->product->name.', @'.$purchase_detail->quantity.' ('.$purchase_detail->total_price_rupiah.')'}}
+                                            {{ $purchase_detail->product->name.', '.$purchase_detail->quantity.' x '.$purchase_detail->price_rupiah.''}}
 
+                                            {{
+                                                $purchase_detail->total_discount_rupiah ? ' - '.$purchase_detail->total_discount_rupiah.' (disc)': ''
+                                            }}
+
+                                            =
+                                            {{ $purchase_detail->total_price_rupiah}}
                                             @if ($purchase_detail->product->status == 'preorder')
                                                 <span class="badge badge-warning">Preorder</span><br>
                                             @endif
-                                            @php
-                                                $total_price += $purchase_detail->total_price;
-                                            @endphp
                                             <br>
                                         @endforeach
                                     </td>
                                     <td>
-                                        {{ $purchase->formatted_purchase_date}}
-                                    </td>
-                                    <td>
-                                        {{
-                                            $purchase->total_cost_rupiah
-                                        }}
+                                        <u>{{ $purchase->formatted_purchase_date}}</u><br>
                                     </td>
                                     <td>
                                         @if ($purchase->self_take == 1)
@@ -64,23 +59,64 @@
                                                 Kurir belum dipilih
                                             @else
                                                 {{ $purchase->courier}} @ {{ $purchase->courier_cost_rupiah}}
+                                                @if ($purchase->self_take == 0)
+                                                    Resi : {{ $purchase->receipt_number }}
+                                                @endif
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{
+                                            $purchase->total_cost_rupiah
+                                        }}
+                                        <br>
+                                        @if ($purchase->status !== 'complete')
+                                            @if ($purchase->status == 'waiting_payment')
+                                                <span class="badge badge-warning">Menunggu Pembayaran</span>
+                                            @else
+                                                <span class="badge badge-info">Menunggu Konfirmasi</span>
                                             @endif
                                         @endif
                                     </td>
                                     <td>
                                         <div class="row">
-                                            <div class="col-12 col-md-12 px-1 mb-1">
-                                                <form
-                                                    action="{{ route('purchase.confirm', $purchase->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="button" class="btn btn-sm btn-block btn-success btn-confirm-purchase">Confirm</button>
-                                                </form>
-                                            </div>
+                                            @if ($purchase->status !== 'complete')
+                                                <div class="col-12 col-md-12 px-1 mb-1">
+                                                    <form
+                                                        action="{{ route('purchase.confirm', $purchase->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="button" class="btn btn-sm btn-block btn-success btn-confirm-purchase">Confirm</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-12 px-1 mb-1">
+                                                    <button class="btn btn-sm btn-info btn-block btn-diskon"
+                                                        data-url="{{ route('purchase.show', $purchase->id) }}"
+                                                        data-post="{{ route('purchase.update-discount', $purchase->id) }}"
+                                                    >
+                                                        Diskon
+                                                    </button>
+                                                </div>
+                                            @else
+                                                @if ($purchase->self_take == 0)
+                                                    <div class="col-12 px-1 mb-1">
+                                                        <button class="btn btn-sm btn-info btn-block btn-resi"
+                                                            data-post="{{ route('purchase.update-resi', $purchase->id) }}"
+                                                        >
+                                                            Input Resi
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endif
                                             <div class="col-12 col-md-12 px-1 mb-1">
                                                 <a href="{{ route('purchase.cetak-resi', $purchase->id) }}" target="_blank" class="btn btn-block btn-default btn-sm" rel="noopener noreferrer">
                                                     Cetak Resi
+                                                </a>
+                                            </div>
+                                            <div class="col-12 col-md-12 px-1 mb-1">
+                                                <a href="{{ route('purchase.cetak-nota', $purchase->id) }}" target="_blank" class="btn btn-block btn-default btn-sm" rel="noopener noreferrer">
+                                                    Cetak Nota
                                                 </a>
                                             </div>
                                             <div class="col-12 col-md-12 px-1 mb-1">
@@ -103,8 +139,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalDiskon" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form
+                    action=""
+                    method="post"
+                >
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="confirm" value="0">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Atur Diskon</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
 
-    <!-- Modal -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-save-confirm-discount">Save & Confirm</button>
+                        <button type="submit" class="btn btn-primary btn-link">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modalPickCourier" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -120,7 +183,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="col-12 radio-container">
-                            <h1>asdas</h1>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -129,6 +192,34 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNomorResi" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="" method="post">
+                @method('PUT')
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Input Resi</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <label for="receipt_number">Nomor Resi</label>
+                          <input type="text"
+                            class="form-control" name="receipt_number" id="receipt_number">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -144,8 +235,8 @@
             "columnDefs": [
                 { "width": "10%", "targets": -1 },
                 {"width": "3%", "targets": 0},
-                {"width": "10%", "targets": 1},
-                {"width": "25%", "targets": 2},
+                {"width": "7%", "targets": 1},
+                {"width": "35%", "targets": 2},
             ],
             responsive: true,
             autoWidth: false
@@ -158,6 +249,11 @@
         } ).draw();
     });
 
+    $('.btn-save-confirm-discount').on('click', function(e){
+        $('#modalDiskon [name="confirm"]').val(1);
+        $('#modalDiskon form').submit();
+        $('#modalDiskon [name="confirm"]').val(0);
+    })
 
     $('.btn-delete-purchase').on('click', function (e) {
         e.preventDefault();
@@ -177,6 +273,33 @@
             }
         })
     });
+
+    $('.btn-resi').on('click', function (e) {
+        $('#modalNomorResi form').attr('action', $(this).data('post'));
+        $('#modalNomorResi').modal('show');
+    });
+
+    $('.btn-diskon').on('click', function (e) {
+        $('#modalDiskon form').attr('action', $(this).data('post'));
+        $.getJSON($(this).data('url'), function (data, textStatus, jqXHR) {
+                $('#modalDiskon .modal-body').empty();
+                $.each(data, function (i, v) {
+                    $('#modalDiskon .modal-body').append(
+                        `
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>`+v.product.name+` @`+v.quantity+`</label>
+                                    <input type="number" name="discount[]" value="`+v.discount+`" class="form-control">
+                                </div>
+                            </div>
+                        `
+                    );
+                });
+                $('#modalDiskon').modal('show');
+            }
+        );
+    });
+
 
     $('.btn-pick-courier').on('click', function (e) {
         $link = $(this).data('link');

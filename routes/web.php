@@ -44,17 +44,33 @@ Route::middleware(['auth'])->group(function () {
     Route::get('purchase-complete', [PurchaseController::class , 'complete'])->name('purchase.complete');
     Route::delete('purchase/{purchase}', [PurchaseController::class , 'destroy'])->name('purchase.destroy');
     Route::get('purchase/available-courier/{purchase}', [PurchaseController::class , 'getAvailableCourier'])->name('purchase.available-courier');
-
+    Route::put('purchase/update-discount/{purchase}', [PurchaseController::class, 'updateDiscount'])->name('purchase.update-discount');
+    Route::put('purchase/update-resi/{purchase}', [PurchaseController::class, 'updateResi'])->name('purchase.update-resi');
 
 
     Route::put('confirm-purchase/{purchase}', [PurchaseController::class , 'confirm'])->name('purchase.confirm');
     Route::get('cetak-resi/{purchase}', [PurchaseController::class , 'cetakResi'])->name('purchase.cetak-resi');
+    Route::get('cetak-nota/{purchase}', [PurchaseController::class , 'cetakNota'])->name('purchase.cetak-nota');
 
     Route::delete('shopping-cart/{shoppingCart}', [ShoppingCartController::class , 'destroy'])->name('shopping-cart.destroy');
     Route::get('shopping-cart', [ShoppingCartController::class , 'index'])->name('shopping-cart.index');
-    Route::get('/symlink', function () {
-        Artisan::call('storage:link');
-    });
+
+    Route::get('/dashboard-axcelia', [AdminController::class, 'index'])->name('dashboard.index');
+
+    Route::get('admin/{admin}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
+});
+
+Route::get('/symlink', function () {
+    Artisan::call('storage:link');
+});
+
+Route::get('/migrate', function () {
+    Artisan::call('migrate:refresh');
+});
+
+Route::get('/seed', function () {
+    Artisan::call('db:seed');
 });
 
 require __DIR__.'/auth.php';

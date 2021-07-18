@@ -25,34 +25,11 @@
                         <b class="caret"></b>
                     </span>
                 </a>
-                <div class="clearfix"></div>
-                <div class="collapse" id="collapseExample">
-                    <ul class="nav">
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-mini-icon">MP</span>
-                                <span class="sidebar-normal">My Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-mini-icon">EP</span>
-                                <span class="sidebar-normal">Edit Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-mini-icon">S</span>
-                                <span class="sidebar-normal">Settings</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
         <ul class="nav">
             <li>
-                <a href="../../examples/dashboard.html">
+                <a href="{{ route('dashboard.index') }}">
                     <i class="now-ui-icons design_app"></i>
                     <p>Dashboard</p>
                 </a>

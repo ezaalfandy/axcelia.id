@@ -39,7 +39,7 @@ class Purchase extends Model
      */
     public function getFormattedPurchaseDateAttribute()
     {
-        return Carbon::parse($this->created_at)->translatedFormat('D, d F Y');;
+        return Carbon::parse($this->created_at)->translatedFormat('d/M/Y');;
     }
 
     /**
@@ -53,6 +53,40 @@ class Purchase extends Model
         return 'Rp '.number_format($this->total_cost, 0, ".", ".");
     }
 
+    /**
+     * Get the Total Cost No Discount
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalCostRupiahNoDiscountAttribute()
+    {
+        $total_cost = 0;
+        foreach ($this->purchase_details as $item)
+        {
+            $total_cost += (intval($item->product->price) * intval($item->quantity));
+        }
+
+        return 'Rp '.number_format($total_cost, 0, ".", ".");
+    }
+
+
+    /**
+     * Get the Total Discount
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalDiscountRupiahAttribute()
+    {
+        $total_discount = 0;
+        foreach ($this->purchase_details as $item)
+        {
+            $total_discount += (intval($item->discount) * intval($item->quantity));
+        }
+
+        return 'Rp '.number_format($total_discount, 0, ".", ".");
+    }
 
     /**
      * Get the courier cost
@@ -65,4 +99,46 @@ class Purchase extends Model
         return 'Rp '.number_format($this->courier_cost, 0, ".", ".");
     }
 
+    /**
+     * Get the Formatted Total Weight
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getFormattedTotalWeightAttribute()
+    {
+        $total_weight = $this->total_weight;
+        if ($total_weight > 1000) {
+            return (floatval($total_weight) / 1000).' Kg';
+        }else{
+            return $total_weight.' gram';
+        }
+    }
+
+    /**
+     * Get the Total Items
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalItemsAttribute()
+    {
+        $total_items = 0;
+        foreach ($this->purchase_details as $item)
+        {
+            $total_items += intval($item->quantity);
+        }
+        return $total_items;
+    }
+
+    /**
+     * Get the Created At
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($created_at)
+    {
+        return Carbon::parse($created_at)->translatedFormat('D, d F Y');
+    }
 }

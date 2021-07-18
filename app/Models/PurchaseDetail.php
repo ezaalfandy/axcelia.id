@@ -21,6 +21,16 @@ class PurchaseDetail extends Model
     }
 
     /**
+     * Get the Price Rupiah
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getPriceRupiahAttribute()
+    {
+        return 'Rp '.number_format($this->product->price, 0, ".", ".");
+    }
+    /**
      * Get the total harga
      *
      * @param  string  $value
@@ -28,7 +38,7 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceRupiahAttribute()
     {
-        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)), 0, ".", ".");
+        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity)), 0, ".", ".");
     }
 
 
@@ -40,6 +50,39 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceAttribute()
     {
-        return intval($this->product->price) * intval($this->quantity);
+        return (intval($this->product->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity));
+    }
+
+    /**
+     * Get the total harga
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalPriceNoDiscountAttribute()
+    {
+        return (intval($this->product->price) * intval($this->quantity));
+    }
+
+    /**
+     * Get the total harga
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalPriceRupiahNoDiscountAttribute()
+    {
+        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)), 0, ".", ".");
+    }
+
+    /**
+     * Get the TOtal discount
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalDiscountRupiahAttribute()
+    {
+        return 'Rp '.number_format((intval($this->discount) * intval($this->quantity)), 0, ".", ".");
     }
 }

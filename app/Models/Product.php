@@ -41,4 +41,25 @@ class Product extends Model
     {
         return secure_asset('storage/product').'/'.$this->image;
     }
+
+    /**
+     * Get all of the shoppingCart for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shoppingCart()
+    {
+        return $this->hasMany(ShoppingCart::class, 'product_id', 'id');
+    }
+
+
+    /**
+     * Get all of the purchaseDetail for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function purchaseDetail()
+    {
+        return $this->hasMany(purchaseDetail::class, 'product_id', 'id');
+    }
 }

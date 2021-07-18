@@ -162,7 +162,6 @@ class UserController extends Controller
     }
 
 
-
     public function changeStatus(User $user, Request $request)
     {
         $newData = array(

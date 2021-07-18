@@ -106,8 +106,10 @@
                                                     <td>
                                                         @if ($purchase->status == 'complete')
                                                             <span class="badge badge-success">Selesai</span>
+                                                        @elseif ($purchase->status == 'waiting_payment')
+                                                            <span class="badge badge-warning">Menunggu Pembayaran</span>
                                                         @else
-                                                            <span class="badge badge-warning">Menunggu</span>
+                                                            <span class="badge badge-info">Menunggu Konfirmasi</span>
                                                         @endif
                                                     </td>
                                                     <td>
