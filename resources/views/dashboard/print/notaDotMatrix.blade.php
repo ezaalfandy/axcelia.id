@@ -88,7 +88,6 @@
 
         @media print {
             body{
-                /* width: 80mm; */
                 margin: 0mm;
             }
             html{
@@ -102,7 +101,7 @@
 
 <body>
 
-    <img src="{{ asset('dashboard/img/logo-axcelia.PNG')}}" alt="" class="img-fluid"><br>
+    <img src="{{ asset('dashboard/img/logo-axcelia.png')}}" alt="" class="img-fluid"><br>
     <p style="text-align: center; margin: 2mm 0mm;">
         Perum. Mutiara Garden blok C no 1. <br>Kel. Lengkong. Kec. Mojoanyar. <br>Mojokerto
     </p>
@@ -121,7 +120,7 @@
                 No. Order
             </div>
             <div class="kolom-kanan">
-                : {{ $purchase->receipt_number }}
+                : {{ $purchase->payment_receipt }}
             </div>
         </div>
         <div>
@@ -235,9 +234,10 @@
     </div>
 
     <p>=================================</p>
-    <div style="width:100%; text-align: center;font-size: 12px; margin: 0px;">
+    <div style="width:100%; text-align: center;font-size: 12px; margin: 0mm 0mm 3cm 0mm;">
         Dicetak Oleh : {{ Auth::user()->name }}
     </div>
+    <p style="margin:0px;">=================================</p>
 
     <script>
             window.print();

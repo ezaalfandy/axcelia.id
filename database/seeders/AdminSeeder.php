@@ -32,7 +32,7 @@ class AdminSeeder extends Seeder
 
 
         DB::table('admins')->insert([
-            "name" => "Admin",
+            "name" => "Isti",
             "email" => "isti@axcelia.id",
             'email_verified_at' => now(),
             "password" => Hash::make("password")
@@ -40,7 +40,7 @@ class AdminSeeder extends Seeder
 
 
         DB::table('admins')->insert([
-            "name" => "Admin",
+            "name" => "Mela",
             "email" => "mela@axcelia.id",
             'email_verified_at' => now(),
             "password" => Hash::make("password")
@@ -48,7 +48,7 @@ class AdminSeeder extends Seeder
 
 
         DB::table('admins')->insert([
-            "name" => "Admin",
+            "name" => "Qofifa",
             "email" => "qofifa@axcelia.id",
             'email_verified_at' => now(),
             "password" => Hash::make("password")
@@ -56,7 +56,7 @@ class AdminSeeder extends Seeder
 
 
         DB::table('admins')->insert([
-            "name" => "Admin",
+            "name" => "Rulita",
             "email" => "rulita@axcelia.id",
             'email_verified_at' => now(),
             "password" => Hash::make("password")

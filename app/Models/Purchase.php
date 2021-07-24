@@ -15,7 +15,7 @@ class Purchase extends Model
      *
      * @var array
      */
-    protected $appends = ['total_items'];
+    protected $appends = ['total_items', 'formatted_total_weight'];
 
     /**
      * Get all of the purchase_detail for the Purchase

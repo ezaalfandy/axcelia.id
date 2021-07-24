@@ -75,6 +75,7 @@ class PurchaseController extends Controller
 
             $shoppingCart = ShoppingCart::whereIn('id', $request->get('shopping_cart_id'))->with('product')->get();
             if($request->has('self_take')){
+                $purchase->payment_receipt = time();
                 $purchase->self_take = true;
                 $purchase->total_cost = PurchaseServices::sumTotalCost($shoppingCart);
             }else{
@@ -99,6 +100,7 @@ class PurchaseController extends Controller
                     'purchase_id' => $purchase->id,
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
+                    'description' => $item->description,
                 ]);
                 $PurchaseDetail->save();
                 $item->delete();
@@ -164,6 +166,7 @@ class PurchaseController extends Controller
 
             $shoppingCart = purchaseDetail::where('purchase_id', $purchase->id)->with('product')->get();
             if($request->has('self_take')){
+                $purchase->payment_receipt = time();
                 $purchase->self_take = true;
                 $purchase->total_cost = PurchaseServices::sumTotalCost($shoppingCart);
             }else{

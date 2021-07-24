@@ -31,25 +31,6 @@
                                     <td>{{ $product->price_rupiah }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td>
-                                        @if ($product->status == 'available')
-                                            <form class="d-inline-block" action="{{ route('product.change-status', $product->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('POST')
-                                                <input type="text" class="d-none" value="unavailable" name="status">
-                                                <button type="button"
-                                                    class="btn btn-warning btn-sm btn-status-product">Non Aktifkan Produk</button>
-                                            </form>
-                                        @elseif($product->status == 'unavailable' || $product->status == 'preorder')
-                                            <form class="d-inline-block" action="{{ route('product.change-status', $product->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('POST')
-                                                <input type="text" class="d-none" value="available" name="status">
-                                                <button type="button"
-                                                    class="btn btn-success btn-sm btn-status-product">Aktifkan Produk</button>
-                                            </form>
-                                        @endif
                                         <button class="btn btn-info btn-sm" onclick="openModalEditProduct(
                                                                 '{{ route('product.show', $product->id) }}',
                                                                 '{{ route('product.update', $product->id) }}'
@@ -63,6 +44,43 @@
                                             <button type="button"
                                                 class="btn btn-danger btn-sm btn-delete-product">Delete</button>
                                         </form>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="buttonMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="now-ui-icons design_bullet-list-67"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="buttonMenu">
+                                                @if ($product->status !== 'available')
+                                                    <form  action="{{ route('product.change-status', $product->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <input type="text" class="d-none" value="available" name="status">
+                                                        <button type="button"
+                                                            class="dropdown-item btn-status-product">Aktifkan Produk</button>
+                                                    </form>
+                                                @endif
+                                                @if ($product->status !== 'preorder')
+                                                    <form action="{{ route('product.change-status', $product->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <input type="text" class="d-none" value="preorder" name="status">
+                                                        <button type="button"
+                                                            class="dropdown-item btn-status-product">Ubah ke pre order</button>
+                                                    </form>
+                                                @endif
+                                                @if ($product->status !== 'unavailable')
+                                                    <form  action="{{ route('product.change-status', $product->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <input type="text" class="d-none" value="unavailable" name="status">
+                                                        <button type="button"
+                                                            class="dropdown-item  btn-status-product">Non Aktifkan Produk</button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

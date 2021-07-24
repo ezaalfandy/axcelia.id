@@ -37,7 +37,7 @@
 
         <div class="row">
             <div class="col-md-3">
-                <img src="{{ asset('dashboard/img/logo-axcelia.PNG')}}" alt="" class="img-fluid">
+                <img src="{{ asset('dashboard/img/logo-axcelia.png')}}" alt="" class="img-fluid">
             </div>
         </div>
         <div class="row">

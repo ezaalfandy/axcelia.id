@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->integer('weight');
             $table->text('image');
             $table->enum('brand', ['Axcelia', 'Mooncarla']);
-            $table->string('description', 100)->nullable();
+            $table->text('description')->nullable();
             $table->enum('status', ['available', 'preorder','unavailable'])->default('available');
             $table->timestamps();
         });

@@ -173,7 +173,7 @@ class ProductController extends Controller
                 //Delete OLD file
                 Storage::disk('public')->delete('product/'.$product->image);
 
-                $image = $name.'.'.$request->image->extension();
+                $image = $name.'-'.time().'.'.$request->image->extension();
                 $request->file('image')->storeAs('product/', $image, 'public');
                 $newData['image'] = $image;
             }

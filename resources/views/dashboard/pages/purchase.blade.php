@@ -43,7 +43,11 @@
                                             =
                                             {{ $purchase_detail->total_price_rupiah}}
                                             @if ($purchase_detail->product->status == 'preorder')
-                                                <span class="badge badge-warning">Preorder</span><br>
+                                                <br><span class="badge badge-warning">Preorder</span>
+                                            @endif
+
+                                            @if ($purchase_detail->description !== NULL || $purchase_detail->description !== '')
+                                                <br>Note : {{ $purchase_detail->description }}
                                             @endif
                                             <br>
                                         @endforeach

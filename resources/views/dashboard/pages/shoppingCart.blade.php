@@ -15,6 +15,7 @@
                                 <td>Tanggal</td>
                                 <td>Product</td>
                                 <td>Quantity</td>
+                                <td>Description</td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -27,8 +28,14 @@
                                         {{ $shopping_cart->user->phone_number}}
                                     </td>
                                     <td>{{ $shopping_cart->formatted_created_date }}</td>
-                                    <td>{{ $shopping_cart->product->name }}</td>
+                                    <td>
+                                        {{ $shopping_cart->product->name }}
+                                        @if ($shopping_cart->product->status == 'preorder')
+                                            <br><span class="badge badge-warning">Preorder</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $shopping_cart->quantity }}</td>
+                                    <td>{{ $shopping_cart->description }}</td>
                                     <td>
                                         <form class="d-inline-block"
                                             action="{{ route('shopping-cart.destroy', $shopping_cart->id) }}"

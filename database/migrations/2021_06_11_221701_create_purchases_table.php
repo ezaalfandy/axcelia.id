@@ -23,7 +23,7 @@ class CreatePurchasesTable extends Migration
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->string('subdistrict')->nullable();
-            $table->string('address')->nullable();
+            $table->text('address')->nullable();
             $table->string('courier', 100)->nullable();
             $table->string('courier_cost', 100)->nullable();
             $table->string('receipt_number', 100)->nullable();
