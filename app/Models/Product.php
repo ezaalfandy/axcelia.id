@@ -20,6 +20,12 @@ class Product extends Model
      * @var array
      */
 
+     /**
+      * The accessors to append to the model's array form.
+      *
+      * @var array
+      */
+     protected $appends = ['image_url', 'price_rupiah'];
     /**
      * Get the Price
      *

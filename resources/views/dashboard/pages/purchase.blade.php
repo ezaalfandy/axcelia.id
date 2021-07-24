@@ -50,6 +50,7 @@
                                     </td>
                                     <td>
                                         <u>{{ $purchase->formatted_purchase_date}}</u><br>
+                                        No Nota : {{ $purchase->payment_receipt}}
                                     </td>
                                     <td>
                                         @if ($purchase->self_take == 1)
@@ -58,7 +59,7 @@
                                             @if ($purchase->courier == NULL)
                                                 Kurir belum dipilih
                                             @else
-                                                {{ $purchase->courier}} @ {{ $purchase->courier_cost_rupiah}}
+                                                {{ $purchase->courier}} @ {{ $purchase->courier_cost_rupiah}}<br>
                                                 @if ($purchase->self_take == 0)
                                                     Resi : {{ $purchase->receipt_number }}
                                                 @endif

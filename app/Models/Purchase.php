@@ -10,6 +10,12 @@ class Purchase extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['total_items'];
 
     /**
      * Get all of the purchase_detail for the Purchase

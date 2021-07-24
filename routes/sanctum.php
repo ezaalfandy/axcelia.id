@@ -25,7 +25,34 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Route::post('/login', [AuthenticatedSessionController::class, 'storeUser']);
     Route::get('product', function () {
-        return  new ProductCollection(Product::where('status', 'available')->get());
+        if(Auth::user()->status == 'approved')
+        {
+            return  new ProductCollection(Product::where('status', 'available')->get());
+        }else
+        {
+            return response()->json(["data" => []], 200);
+        }
+    });
+
+    // get axcelia
+    Route::get('mooncarla', function () {
+        if(Auth::user()->status == 'approved')
+        {
+            return  new ProductCollection(Product::where(['status' => 'available', 'brand' => 'mooncarla'])->get());
+        }else
+        {
+            return response()->json(["data" => []], 200);
+        }
+    });
+
+    Route::get('axcelia', function () {
+        if(Auth::user()->status == 'approved')
+        {
+            return  new ProductCollection(Product::where(['status' => 'available', 'brand' => 'axcelia'])->get());
+        }else
+        {
+            return response()->json(["data" => []], 200);
+        }
     });
 
     Route::get('pre-order', function () {
@@ -74,6 +101,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/subdistrict/{id}', [UserController::class, 'getSubdistrict']);
 
     Route::get('purchase/available-courier/{purchase}/{subdistrict_id}', [PurchaseController::class , 'getAvailableCourier'])->name('purchase.available-courier');
+
+    Route::get('trace-package/{purchase}', [PurchaseController::class , 'tracePackage'])->name('purchase.trace-package');
 
     //ESTIMASI ONGKIR
     Route::get('cek-ongkir/{subdistrict_id}', [PurchaseController::class , 'estimateCourier']);

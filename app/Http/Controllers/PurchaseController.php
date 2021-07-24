@@ -263,7 +263,6 @@ class PurchaseController extends Controller
         ->with('success', 'Update diskon berhasil');
     }
 
-
     public function getAvailableCourier(Purchase $purchase, $subdistrict_id)
     {
         $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->with('product')->get();
@@ -271,6 +270,14 @@ class PurchaseController extends Controller
         $weight = CourierServices::sumTotalWeight($purchase_details);
         $availableCourier = CourierServices::getCourierCost($subdistrict_id, $weight);
         return $availableCourier;
+    }
+
+    public function tracePackage(Purchase $purchase)
+    {
+        $receipt_number = $purchase->receipt_number;
+        $courier = strtolower(explode(' ', $purchase->courier)[0]);
+        $trace = CourierServices::tracePackage($receipt_number, $courier);
+        return $trace;
     }
 
     public function estimateCourier($subdistrict_id)
