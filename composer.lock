@@ -863,6 +863,7 @@
         },
         {
             "name": "laravel/breeze",
+<<<<<<< Updated upstream
             "version": "v1.3.1",
             "source": {
                 "type": "git",
@@ -873,6 +874,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/breeze/zipball/ad800763ace3dfa7658a44a8488d145e1f2f2a47",
                 "reference": "ad800763ace3dfa7658a44a8488d145e1f2f2a47",
+=======
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "31083193c2050a970bfd38378a93ecf166b5c985"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/breeze/zipball/31083193c2050a970bfd38378a93ecf166b5c985",
+                "reference": "31083193c2050a970bfd38378a93ecf166b5c985",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -916,6 +929,7 @@
                 "issues": "https://github.com/laravel/breeze/issues",
                 "source": "https://github.com/laravel/breeze"
             },
+<<<<<<< Updated upstream
             "time": "2021-06-22T15:15:44+00:00"
         },
         {
@@ -930,6 +944,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/d892dbacbe3859cf9303ccda98ac8d782141d5ae",
                 "reference": "d892dbacbe3859cf9303ccda98ac8d782141d5ae",
+=======
+            "time": "2021-06-08T20:27:33+00:00"
+        },
+        {
+            "name": "laravel/framework",
+            "version": "v8.46.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "a18266c612e0e6aba5e0174b3c873d2d217dccfb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a18266c612e0e6aba5e0174b3c873d2d217dccfb",
+                "reference": "a18266c612e0e6aba5e0174b3c873d2d217dccfb",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -1084,7 +1114,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< Updated upstream
             "time": "2021-07-13T12:41:53+00:00"
+=======
+            "time": "2021-06-08T13:36:46+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "laravel/sanctum",
@@ -1567,6 +1601,7 @@
         },
         {
             "name": "nesbot/carbon",
+<<<<<<< Updated upstream
             "version": "2.50.0",
             "source": {
                 "type": "git",
@@ -1577,6 +1612,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/f47f17d17602b2243414a44ad53d9f8b9ada5fdb",
                 "reference": "f47f17d17602b2243414a44ad53d9f8b9ada5fdb",
+=======
+            "version": "2.49.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "93d9db91c0235c486875d22f1e08b50bdf3e6eee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/93d9db91c0235c486875d22f1e08b50bdf3e6eee",
+                "reference": "93d9db91c0235c486875d22f1e08b50bdf3e6eee",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -1656,7 +1703,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< Updated upstream
             "time": "2021-06-28T22:38:45+00:00"
+=======
+            "time": "2021-06-02T07:31:40+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "nikic/php-parser",
@@ -5147,6 +5198,7 @@
         },
         {
             "name": "facade/ignition",
+<<<<<<< Updated upstream
             "version": "2.11.0",
             "source": {
                 "type": "git",
@@ -5157,6 +5209,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/facade/ignition/zipball/dc6818335f50ccf0b90284784718ea9a82604286",
                 "reference": "dc6818335f50ccf0b90284784718ea9a82604286",
+=======
+            "version": "2.10.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facade/ignition.git",
+                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/43688227bbf27c43bc1ad83af224f135b6ef0ff4",
+                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -5219,7 +5283,11 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
+<<<<<<< Updated upstream
             "time": "2021-07-12T15:55:51+00:00"
+=======
+            "time": "2021-06-11T06:57:25+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "facade/ignition-contracts",
@@ -5463,6 +5531,7 @@
         },
         {
             "name": "laravel/sail",
+<<<<<<< Updated upstream
             "version": "v1.8.6",
             "source": {
                 "type": "git",
@@ -5473,6 +5542,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/sail/zipball/51ecfe0f048f8f8e6c5617e02a1f67ca22817c98",
                 "reference": "51ecfe0f048f8f8e6c5617e02a1f67ca22817c98",
+=======
+            "version": "v1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sail.git",
+                "reference": "77fb31eb48de9971af1fe0c6b47be3da6b869dfd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/77fb31eb48de9971af1fe0c6b47be3da6b869dfd",
+                "reference": "77fb31eb48de9971af1fe0c6b47be3da6b869dfd",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -5519,7 +5600,11 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
+<<<<<<< Updated upstream
             "time": "2021-07-15T07:35:41+00:00"
+=======
+            "time": "2021-06-08T15:18:38+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "mockery/mockery",

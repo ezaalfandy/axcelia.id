@@ -27,7 +27,7 @@
         .daftar{
             width: 100%;
             padding: 0%;
-            font-size: 12px;
+            font-size: 15px;
         }
         .daftar > div{
             width: 100%;
@@ -56,7 +56,7 @@
         .data-order, .ringkasan{
             width: 100%;
             padding: 0%;
-            font-size: 12px;
+            font-size: 15px;
             margin: 4mm 0mm;
         }
         .daftar > div{
@@ -234,11 +234,9 @@
     </div>
 
     <p>=================================</p>
-    <div style="width:100%; text-align: center;font-size: 12px; margin: 0mm 0mm 3cm 0mm;">
+    <div style="width:100%; text-align: center;font-size: 15px; margin: 0px;">
         Dicetak Oleh : {{ Auth::user()->name }}
     </div>
-    <p style="margin:0px;">=================================</p>
-
     <script>
             window.print();
     </script>
