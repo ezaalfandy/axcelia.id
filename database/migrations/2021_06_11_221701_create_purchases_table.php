@@ -18,6 +18,9 @@ class CreatePurchasesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->boolean('self_take')->default(0);
+            $table->boolean('dropship')->default(0);
+            $table->text('sender_name')->nullable();
+            $table->text('sender_phone_number')->nullable();
             $table->string('total_cost', 100);
             $table->text('payment_receipt')->nullable();
             $table->string('province')->nullable();

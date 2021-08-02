@@ -44,21 +44,21 @@
                 <div class="collapse" id="produk" style="">
                     <ul class="nav">
                         <li>
-                            <a href="{{ route('product.axcelia') }}">
-                                <span class="sidebar-mini-icon">AX</span>
-                                <span class="sidebar-normal">Axcelia</span>
+                            <a href="{{ route('product.product-ready') }}">
+                                <span class="sidebar-mini-icon">PR</span>
+                                <span class="sidebar-normal">Product Ready</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('product.mooncarla') }}">
-                                <span class="sidebar-mini-icon">MC</span>
-                                <span class="sidebar-normal">Mooncarla</span>
+                            <a href="{{ route('product.barang-unik') }}">
+                                <span class="sidebar-mini-icon">UN</span>
+                                <span class="sidebar-normal">Barang Unik</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('product.preorder') }}">
                                 <span class="sidebar-mini-icon">PR</span>
-                                <span class="sidebar-normal">Pre order</span>
+                                <span class="sidebar-normal">Product Pre order</span>
                             </a>
                         </li>
                         <li>

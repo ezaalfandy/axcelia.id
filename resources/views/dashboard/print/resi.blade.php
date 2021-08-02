@@ -104,11 +104,23 @@
 <body>
     <div class="content">
 
-        <img src="{{ asset('dashboard/img/logo-axcelia.png')}}" alt="" class="img-fluid">
+        @if ($purchase->dropship == 0)
+            <img src="{{ asset('dashboard/img/logo-axcelia.png')}}" alt="" class="img-fluid">
+        @endif
         <p class="font-weight-bold"><b>Dari :</b></p>
+        @if ($purchase->dropship == 1)
+            {{ $purchase->sender_name}}
+        @else
+            Axcelia.id
+        @endif
         <p>
             Perum. Mutiara Garden blok C no 1. <br>Kel. Lengkong. Kec. Mojoanyar. <br>Mojokerto
-            <br>0857 3173 3546
+            <br>
+            @if ($purchase->dropship == 1)
+                {{ $purchase->sender_phone_number}}
+            @else
+                0857 3173 3546
+            @endif
         </p>
 
         <p class="font-weight-bold"><b>Kepada :</b></p>

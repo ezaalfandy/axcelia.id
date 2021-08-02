@@ -24,7 +24,7 @@ class PurchaseController extends Controller
     public function index()
     {
         $data = [
-            'purchases' => Purchase::where('status', '!=', 'complete')->with(['purchase_details.product', 'user'])->get()
+            'purchases' => Purchase::where('status', '!=', 'complete')->with(['purchase_details.productVarian', 'user'])->get()
         ];
         return view('dashboard.pages.purchase', $data);
     }
@@ -32,7 +32,7 @@ class PurchaseController extends Controller
     public function complete()
     {
         $data = [
-            'purchases' => Purchase::where('status', 'complete')->with(['purchase_details.product', 'user'])->get()
+            'purchases' => Purchase::where('status', 'complete')->with(['purchase_details.productVarian', 'user'])->get()
         ];
         return view('dashboard.pages.purchase', $data);
     }
@@ -73,14 +73,22 @@ class PurchaseController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
-            $shoppingCart = ShoppingCart::whereIn('id', $request->get('shopping_cart_id'))->with('product')->get();
+            if(Purchase::latest()->count() == 0)
+            {
+                $lastPurchaseId = 1;
+            }else
+            {
+                $lastPurchaseId = Purchase::latest()->first()->id + 1;
+            }
+
+            $shoppingCart = ShoppingCart::whereIn('id', $request->get('shopping_cart_id'))->with('productVarian')->get();
             if($request->has('self_take')){
-                $purchase->payment_receipt = time();
+                $purchase->payment_receipt = sprintf('%05d', $lastPurchaseId);
                 $purchase->self_take = true;
                 $purchase->total_cost = PurchaseServices::sumTotalCost($shoppingCart);
             }else{
                 $purchase->self_take = false;
-                $purchase->payment_receipt = time();
+                $purchase->payment_receipt = sprintf('%05d', $lastPurchaseId);
                 $purchase->province = $request->get('province');
                 $purchase->city = $request->get('city');
                 $purchase->subdistrict = $request->get('subdistrict');
@@ -98,7 +106,7 @@ class PurchaseController extends Controller
                 $item = ShoppingCart::findOrFail($v);
                 $PurchaseDetail = new PurchaseDetail([
                     'purchase_id' => $purchase->id,
-                    'product_id' => $item->product_id,
+                    'product_varian_id' => $item->product_varian_id,
                     'quantity' => $item->quantity,
                     'description' => $item->description,
                 ]);
@@ -124,7 +132,7 @@ class PurchaseController extends Controller
     public function show(Purchase $purchase)
     {
         $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->with(
-        ['product' =>
+        ['productVarian' =>
             function($query){
                 $query->orderBy('name', 'ASC');
             }
@@ -164,20 +172,25 @@ class PurchaseController extends Controller
                 'courier_cost'=>'sometimes',
             ]);
 
-            $shoppingCart = purchaseDetail::where('purchase_id', $purchase->id)->with('product')->get();
+            $shoppingCart = purchaseDetail::where('purchase_id', $purchase->id)->with('productVarian')->get();
             if($request->has('self_take')){
-                $purchase->payment_receipt = time();
                 $purchase->self_take = true;
                 $purchase->total_cost = PurchaseServices::sumTotalCost($shoppingCart);
             }else{
+                if($request->has('dropship'))
+                {
+                    $purchase->dropship = 1;
+                    $purchase->sender_name = $request->get('sender_name');
+                    $purchase->sender_phone_number = $request->get('sender_phone_number');
+                }
                 $purchase->self_take = false;
-                $purchase->payment_receipt = time();
                 $purchase->province = $request->get('province');
                 $purchase->city = $request->get('city');
                 $purchase->subdistrict = $request->get('subdistrict');
                 $purchase->address = $request->get('address');
                 $purchase->courier = $request->get('courier');
-                $purchase->courier_cost = $request->get('courier_cost');PurchaseServices::sumTotalCost($shoppingCart);
+                $purchase->courier_cost = $request->get('courier_cost');
+                $purchase->total_cost = PurchaseServices::sumTotalCost($shoppingCart, $request->get('courier_cost'));
             }
 
             $purchase->save();
@@ -225,7 +238,7 @@ class PurchaseController extends Controller
     public function updateDiscount(Purchase $purchase, Request $request){
 
         $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->with(
-            ['product' =>
+            ['productVarian' =>
                 function($query){
                     $query->orderBy('name', 'ASC');
                 }
@@ -268,7 +281,7 @@ class PurchaseController extends Controller
 
     public function getAvailableCourier(Purchase $purchase, $subdistrict_id)
     {
-        $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->with('product')->get();
+        $purchase_details = PurchaseDetail::where('purchase_id', $purchase->id)->with('productVarian')->get();
 
         $weight = CourierServices::sumTotalWeight($purchase_details);
         $availableCourier = CourierServices::getCourierCost($subdistrict_id, $weight);
@@ -301,7 +314,7 @@ class PurchaseController extends Controller
         $data = [
             'user' => User::find($purchase->user_id),
             'purchase' => $purchase,
-            'purchase_details' => PurchaseDetail::where('purchase_id', $purchase->id)->with('product')->get()
+            'purchase_details' => PurchaseDetail::where('purchase_id', $purchase->id)->with('productVarian')->get()
         ];
         return view('dashboard.print.notaDotMatrix', $data);
     }

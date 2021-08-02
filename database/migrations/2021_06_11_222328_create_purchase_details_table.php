@@ -17,8 +17,8 @@ class CreatePurchaseDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('purchase_id');
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
-            $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('product_varian_id');
+            $table->foreign('product_varian_id')->references('id')->on('product_varians')->onDelete('cascade');
             $table->integer('quantity');
             $table->text('description')->nullable();
             $table->integer('discount')->default(0);

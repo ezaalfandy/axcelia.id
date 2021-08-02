@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductVarian;
 use App\Models\ShoppingCart;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class ShoppingCartController extends Controller
     public function index()
     {
         $data = [
-            'shopping_carts' => ShoppingCart::with(['product', 'user'])->get()
+            'shopping_carts' => ShoppingCart::with(['productVarian', 'user'])->get()
         ];
         return view('dashboard.pages.shoppingCart', $data);
     }
@@ -46,22 +47,26 @@ class ShoppingCartController extends Controller
         {
             DB::beginTransaction();
             $request->validate([
-                'product_id'=>'required',
+                'product_varian_id'=>'required',
                 'quantity'=>'required',
             ]);
 
-            $product = Product::findOrFail($request->get('product_id'));
-            $product->stock -= $request->get('quantity');
-            $product->save();
+            $productVarians = $request->get('product_varian_id');
 
-            $ShoppingCart = new ShoppingCart([
-                'user_id' => Auth::user()->id,
-                'product_id' => $request->get('product_id'),
-                'quantity' => $request->get('quantity'),
-                'description' => $request->get('description'),
-            ]);
+            foreach ($productVarians as $key => $product_varian_id) {
+                $quantity = $request->get('quantity')[$key];
+                $productVarian = ProductVarian::findOrFail($product_varian_id);
+                $productVarian->stock -= $quantity;
+                $productVarian->save();
 
-            $ShoppingCart->save();
+                $ShoppingCart = new ShoppingCart([
+                    'user_id' => Auth::user()->id,
+                    'product_varian_id' => $product_varian_id,
+                    'quantity' => $quantity,
+                    'description' => $request->get('description'),
+                ]);
+                $ShoppingCart->save();
+            }
 
             DB::commit();
             return response()->json(['status' => 'success'], 200);
@@ -114,9 +119,9 @@ class ShoppingCartController extends Controller
     public function destroy(ShoppingCart $shoppingCart)
     {
         DB::beginTransaction();
-        $product = Product::findOrFail($shoppingCart->product_id);
-        $product->stock += $shoppingCart->quantity;
-        $product->save();
+        $productVarian = ProductVarian::findOrFail($shoppingCart->product_varian_id);
+        $productVarian->stock += $shoppingCart->quantity;
+        $productVarian->save();
 
         $shoppingCart->delete();
         DB::commit();

@@ -29,8 +29,8 @@
                                     </td>
                                     <td>{{ $shopping_cart->formatted_created_date }}</td>
                                     <td>
-                                        {{ $shopping_cart->product->name }}
-                                        @if ($shopping_cart->product->status == 'preorder')
+                                        {{ $shopping_cart->productVarian->full_name }}
+                                        @if ($shopping_cart->productVarian->status == 'preorder')
                                             <br><span class="badge badge-warning">Preorder</span>
                                         @endif
                                     </td>

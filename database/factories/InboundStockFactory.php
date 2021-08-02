@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Produk;
+use App\Models\InboundStock;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProdukFactory extends Factory
+class InboundStockFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Produk::class;
+    protected $model = InboundStock::class;
 
     /**
      * Define the model's default state.

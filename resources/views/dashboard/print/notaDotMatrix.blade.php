@@ -27,7 +27,7 @@
         .daftar{
             width: 100%;
             padding: 0%;
-            font-size: 15px;
+            font-size: 12px;
         }
         .daftar > div{
             width: 100%;
@@ -56,7 +56,7 @@
         .data-order, .ringkasan{
             width: 100%;
             padding: 0%;
-            font-size: 15px;
+            font-size: 12px;
             margin: 4mm 0mm;
         }
         .daftar > div{
@@ -101,7 +101,6 @@
 
 <body>
 
-    <img src="{{ asset('dashboard/img/logo-axcelia.png')}}" alt="" class="img-fluid"><br>
     <p style="text-align: center; margin: 2mm 0mm;">
         Perum. Mutiara Garden blok C no 1. <br>Kel. Lengkong. Kec. Mojoanyar. <br>Mojokerto
     </p>
@@ -171,13 +170,13 @@
             @foreach ($purchase_details as $purchase_detail)
                 <div>
                     <div class="produk">
-                        {{ $purchase_detail->product->name }}
+                        {{ $purchase_detail->productVarian->name }}
                     </div>
                     <div class="jumlah">
                         {{ $purchase_detail->quantity }}
                     </div>
                     <div class="harga">
-                        {{ $purchase_detail->product->price_rupiah }}
+                        {{ $purchase_detail->productVarian->price_rupiah }}
                     </div>
                     <div class="total">
                         {{ $purchase_detail->total_price_rupiah_no_discount }}
@@ -234,7 +233,7 @@
     </div>
 
     <p>=================================</p>
-    <div style="width:100%; text-align: center;font-size: 15px; margin: 0px;">
+    <div style="width:100%; text-align: center;font-size: 12px; margin: 0px;">
         Dicetak Oleh : {{ Auth::user()->name }}
     </div>
     <script>

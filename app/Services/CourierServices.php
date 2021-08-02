@@ -44,7 +44,7 @@ class CourierServices{
     public static function sumTotalWeight($items){
 
         foreach ($items as $item) {
-            self::$totalWeight += ($item->quantity * $item->product->weight);
+            self::$totalWeight += ($item->quantity * $item->productVarian->weight);
         }
 
         return self::$totalWeight;

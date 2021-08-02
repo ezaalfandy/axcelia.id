@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InboundStockController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVarianController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ShoppingCartController;
 use App\Http\Controllers\UserController;
 use App\Models\Product;
+use App\Models\ProductVarian;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -24,14 +27,18 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('product', ProductController::class);
     Route::post('change-status/{product}', [ProductController::class, 'changeStatus'])->name('product.change-status');
 
-    Route::get('axcelia', [ProductController::class, 'axcelia'])->name('product.axcelia');
-    Route::get('mooncarla', [ProductController::class, 'mooncarla'])->name('product.mooncarla');
+    Route::get('product-ready', [ProductController::class, 'productReady'])->name('product.product-ready');
+    Route::get('barang-unik', [ProductController::class, 'barangUnik'])->name('product.barang-unik');
     Route::get('preorder', [ProductController::class, 'preorder'])->name('product.preorder');
     Route::get('non-active', [ProductController::class, 'nonActive'])->name('product.non-active');
+
+    Route::resource('product-varian', ProductVarianController::class);
+    Route::resource('inbound-stock', InboundStockController::class);
 
     Route::get('user-approved', [UserController::class, 'userApproved'])->name('user.approved');
     Route::get('user-waiting', [UserController::class, 'userWaiting'])->name('user.waiting');
@@ -70,7 +77,7 @@ Route::get('/migrate', function () {
 });
 
 Route::get('/seed', function () {
-    Artisan::call('db:seed');
+    Artisan::call('db:seed --force');
 });
 
 require __DIR__.'/auth.php';

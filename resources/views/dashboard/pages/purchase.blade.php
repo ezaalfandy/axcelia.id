@@ -19,7 +19,7 @@
                                 <td class="not-mobile">Items</td>
                                 <td class="not-mobile">Tanggal Order</td>
                                 <td>Ekspedisi</td>
-                                <td>Total Biaya</td>
+                                <td>Total Yang Harus Dibayar</td>
                                 <td class="not-mobile"></td>
                             </tr>
                         </thead>
@@ -34,23 +34,26 @@
                                     </td>
                                     <td>
                                         @foreach ($purchase->purchase_details as $purchase_detail)
-                                            {{ $purchase_detail->product->name.', '.$purchase_detail->quantity.' x '.$purchase_detail->price_rupiah.''}}
-
+                                            {{ $purchase_detail->productVarian->full_name.', '.$purchase_detail->quantity.' x '.$purchase_detail->price_rupiah.''}}
+                                            <br>
+                                            Diskon :
                                             {{
-                                                $purchase_detail->total_discount_rupiah ? ' - '.$purchase_detail->total_discount_rupiah.' (disc)': ''
+                                                $purchase_detail->total_discount_rupiah ? ' - '.$purchase_detail->total_discount_rupiah : ''
                                             }}
 
                                             =
                                             {{ $purchase_detail->total_price_rupiah}}
-                                            @if ($purchase_detail->product->status == 'preorder')
+                                            @if ($purchase_detail->productVarian->status == 'preorder')
                                                 <br><span class="badge badge-warning">Preorder</span>
                                             @endif
 
-                                            @if ($purchase_detail->description !== NULL || $purchase_detail->description !== '')
+                                            @if ($purchase_detail->description != NULL && $purchase_detail->description != ' ')
                                                 <br>Note : {{ $purchase_detail->description }}
                                             @endif
                                             <br>
+                                            <br>
                                         @endforeach
+                                        <b>Total Belanja : {{ $purchase->total_cost_rupiah_no_courier}}</b>
                                     </td>
                                     <td>
                                         <u>{{ $purchase->formatted_purchase_date}}</u><br>
@@ -63,17 +66,24 @@
                                             @if ($purchase->courier == NULL)
                                                 Kurir belum dipilih
                                             @else
-                                                {{ $purchase->courier}} @ {{ $purchase->courier_cost_rupiah}}<br>
-                                                @if ($purchase->self_take == 0)
-                                                    Resi : {{ $purchase->receipt_number }}
+                                                {{ $purchase->courier}} <br>
+                                                {{ $purchase->courier_cost_rupiah}}<br>
+                                                Resi : {{ $purchase->receipt_number }}<br>
+                                                Dikirim ke :
+                                                {{ $purchase->subdistrict.' - '.$purchase->city}}<br>
+                                                {{ $purchase->province}}<br>
+                                                @if ($purchase->dropship == 1)
+                                                    <span class="badge badge-primary">Dropship</span><br>
                                                 @endif
                                             @endif
                                         @endif
                                     </td>
                                     <td>
-                                        {{
-                                            $purchase->total_cost_rupiah
-                                        }}
+                                        <b>
+                                            {{
+                                                $purchase->total_cost_rupiah
+                                            }}
+                                        </b>
                                         <br>
                                         @if ($purchase->status !== 'complete')
                                             @if ($purchase->status == 'waiting_payment')
@@ -293,7 +303,7 @@
                         `
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>`+v.product.name+` @`+v.quantity+`</label>
+                                    <label>`+v.product_varian.full_name+` @`+v.quantity+`</label>
                                     <input type="number" name="discount[]" value="`+v.discount+`" class="form-control">
                                 </div>
                             </div>

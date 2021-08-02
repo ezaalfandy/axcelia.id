@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductVarian;
+use App\Events\StockUpdate;
+use App\Models\InboundStock;
+use App\Models\PurchaseDetail;
 use Illuminate\Http\Request;
 use Illuminate\Routing\RedirectController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -16,27 +21,27 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return redirect('/axcelia');
+        return redirect('/product-ready');
     }
 
-    public function axcelia(){
+    public function productReady(){
         $data = array(
-            'products' => Product::where(
+            'products' => Product::with('productVarian')->where(
                 array(
                     'status' => 'available',
-                    'brand' => 'axcelia'
+                    'brand' => 'product-ready'
                 )
             )->get()
         );
         return view('dashboard.pages.product', $data);
     }
 
-    public function mooncarla(){
+    public function barangUnik(){
         $data = array(
-            'products' => Product::where(
+            'products' => Product::with('productVarian')->where(
                 array(
                     'status' => 'available',
-                    'brand' => 'mooncarla'
+                    'brand' => 'barang-unik'
                 )
             )->get()
         );
@@ -45,7 +50,7 @@ class ProductController extends Controller
 
     public function preOrder(){
         $data = array(
-            'products' => Product::where(
+            'products' => Product::with('productVarian')->where(
                 array(
                     'status' => 'preorder',
                 )
@@ -56,7 +61,7 @@ class ProductController extends Controller
 
     public function nonActive(){
         $data = array(
-            'products' => Product::where(
+            'products' => Product::with('productVarian')->where(
                 array(
                     'status' => 'unavailable',
                 )
@@ -82,29 +87,31 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'name'=>'required',
+            'price'=>'required|numeric',
+            'status'=>'sometimes',
+            'brand'=>'sometimes',
+            'image'=>'required',
+            'weight'=>'required|numeric',
+            'product_varian_name'=>'required',
+            'product_varian_stock'=>'required',
+        ]);
+
         $name = $request->get('name');
 
         //CEK GAMBAR VALID
         if($request->image->isValid())
         {
             $image = $name.'.'.$request->image->extension();
-            $request->file('image')->storeAs('product/', $image, 'public');
+            $request->file('image')->storeAs('products/', $image, 'public');
         }
 
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-            'stock'=>'required',
-            'status'=>'sometimes',
-            'brand'=>'sometimes',
-            'image'=>'required',
-            'weight'=>'required',
-        ]);
-
+        DB::beginTransaction();
         $Product = new Product([
             'name' => $name,
             'price' => $request->get('price'),
-            'stock' => $request->get('stock'),
             'weight' => $request->get('weight'),
             'status' => $request->get('status'),
             'brand' => $request->get('brand'),
@@ -113,6 +120,16 @@ class ProductController extends Controller
         ]);
 
         $Product->save();
+
+        foreach ($request->get('product_varian_name') as $k => $v) {
+            $productVarian = new ProductVarian([
+                'product_id' => $Product->id,
+                'name' => $v,
+                'stock' => $request->get('product_varian_stock')[$k]
+            ]);
+            $productVarian->save();
+        }
+        DB::commit();
         return redirect()->back()
         ->with('success', 'Product created successfully');
     }
@@ -136,7 +153,16 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $data = array(
+            'product' => $product,
+            'product_varians' => ProductVarian::where('product_id', $product->id)->get(),
+            'inbound_stocks' => InboundStock::select('inbound_stocks.*')->join('product_varians', 'product_varians.id', 'inbound_stocks.product_varian_id')
+                                ->where('product_id', $product->id)->get(),
+            'purchase_details' => PurchaseDetail::whereIn('product_varian_id', ProductVarian::where('product_id', $product->id)->get()->pluck('id'))
+                                ->with(['productVarian', 'purchase.user'])->get()
+        );
+        // dd($data['purchase_details']);
+        return view('dashboard.pages.product-detail', $data);
     }
 
     /**
@@ -152,7 +178,6 @@ class ProductController extends Controller
             'id'=>'required',
             'name'=>'required',
             'price'=>'required',
-            'stock'=>'required',
             'image' => 'sometimes'
         ]);
 
@@ -162,7 +187,6 @@ class ProductController extends Controller
             'id' => $request->get('id'),
             'name' => $name,
             'price' => $request->get('price'),
-            'stock' => $request->get('stock'),
             'description' => $request->get('description'),
         );
 
@@ -171,10 +195,10 @@ class ProductController extends Controller
             if($request->image->isValid())
             {
                 //Delete OLD file
-                Storage::disk('public')->delete('product/'.$product->image);
+                Storage::disk('public')->delete('products/'.$product->image);
 
                 $image = $name.'-'.time().'.'.$request->image->extension();
-                $request->file('image')->storeAs('product/', $image, 'public');
+                $request->file('image')->storeAs('products/', $image, 'public');
                 $newData['image'] = $image;
             }
         }

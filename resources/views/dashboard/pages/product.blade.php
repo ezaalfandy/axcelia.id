@@ -19,7 +19,8 @@
                                 <td>No</td>
                                 <td>Name</td>
                                 <td>Price</td>
-                                <td>Stock</td>
+                                <td>Total Stock</td>
+                                <td>varians</td>
                                 <td class="not-mobile"></td>
                             </tr>
                         </thead>
@@ -31,6 +32,16 @@
                                     <td>{{ $product->price_rupiah }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td>
+                                        @foreach ($product->productVarian as $item)
+                                            {{
+                                                $item->name.' = '.$item->stock.' pcs'
+                                            }} <br>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('product.edit', $product->id)}}" class="btn btn-success btn-sm">
+                                            Detail
+                                        </a>
                                         <button class="btn btn-info btn-sm" onclick="openModalEditProduct(
                                                                 '{{ route('product.show', $product->id) }}',
                                                                 '{{ route('product.update', $product->id) }}'
@@ -44,7 +55,7 @@
                                             <button type="button"
                                                 class="btn btn-danger btn-sm btn-delete-product">Delete</button>
                                         </form>
-                                        <div class="dropdown d-inline-block">
+                                        <div class="d-inline-block dropleft">
                                             <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="buttonMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="now-ui-icons design_bullet-list-67"></i>
                                             </button>
@@ -94,7 +105,7 @@
 
     <div class="modal fade" id="modalInsertProduct" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <form method="POST" novalidate="novalidate" id="formInsertProduct" action="{{ route('product.store') }} "
                     enctype="multipart/form-data">
@@ -107,82 +118,116 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @if (Request::segment(1) == 'axcelia')
-                            <input type="hidden" name="brand" value="axcelia">
-                        @elseif (Request::segment(1) == 'mooncarla')
-                            <input type="hidden" name="brand" value="mooncarla">
-                        @endif
+                        <div class="row">
+                            <div class="col-lg-6">
+                                @if (Request::segment(1) == 'product-ready')
+                                    <input type="hidden" name="brand" value="product-ready">
+                                @elseif (Request::segment(1) == 'barang-unik')
+                                    <input type="hidden" name="brand" value="barang-unik">
+                                @endif
 
-                        <div class="form-group">
-                            <label for="insert_products_image">Image</label>
-                            <div class="fileinput fileinput-new text-center d-block" data-provides="fileinput">
-                                <div class="fileinput-new thumbnail">
-                                    <img src="{{ asset('dashboard') }}/img/image_placeholder.jpg" alt="...">
+                                <div class="form-group">
+                                    <label for="insert_products_image text-center">Image</label>
+                                    <div class="fileinput fileinput-new text-center d-block" data-provides="fileinput">
+                                        <div class="fileinput-new thumbnail">
+                                            <img src="{{ asset('dashboard') }}/img/image_placeholder.jpg" alt="...">
+                                        </div>
+                                        <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                        <div>
+                                            <span class="btn btn-primary btn-link  btn-file">
+                                                <span class="fileinput-new">Pilih Gambar</span>
+                                                <span class="fileinput-exists">Ganti</span>
+                                                <input type="file" name="image" maxsize="2" extension="jpg|gif|png|jpeg" required>
+                                            </span>
+                                            <a class="btn btn-danger btn-link fileinput-exists" data-dismiss="fileinput"><i
+                                                    class="fa fa-times"></i> Remove</a>
+                                        </div>
+                                    </div>
+                                    @error('image')<small class="text-danger">{{ $message }}</small>@enderror
                                 </div>
-                                <div class="fileinput-preview fileinput-exists thumbnail"></div>
-                                <div>
-                                    <span class="btn btn-primary btn-link  btn-file">
-                                        <span class="fileinput-new">Pilih Gambar</span>
-                                        <span class="fileinput-exists">Ganti</span>
-                                        <input type="file" name="image" maxsize="2" extension="jpg|gif|png|jpeg">
-                                    </span>
-                                    <a class="btn btn-danger btn-link fileinput-exists" data-dismiss="fileinput"><i
-                                            class="fa fa-times"></i> Remove</a>
+                                <div class="form-group">
+                                    <label for="insert_products_name">Name</label>
+                                    <input type="text" name="name" value="{{ old('name') }}" id="insert_products_name"
+                                        class="form-control" required="true" />
+                                    @error('name')<small class="text-danger">{{ $message }}</small>@enderror
+                                </div>
+                                @if (Request::segment(1) == 'preorder')
+                                    <input type="hidden" name="status" value="preorder">
+                                    <div class="form-group">
+                                        <label for="insert_products_brand">Brand</label>
+                                        <div class="form-check form-check-radio pl-0">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="brand" id="insert_products_brand" value="product-ready" required="true">
+                                                <span class="form-check-sign"></span>
+                                                Produk Ready
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-radio pl-0">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="brand" id="insert_products_brand" value="barang-unik" required="true">
+                                                <span class="form-check-sign"></span>
+                                                Barang Unik
+                                            </label>
+                                        </div>
+                                        @error('brand')<small class="text-danger">{{ $message }}</small>@enderror
+                                    </div>
+                                @else
+                                    <input type="hidden" name="status" value="available">
+                                @endif
+
+                                <div class="form-group">
+                                    <label for="insert_products_price">Price</label>
+                                    <input type="number" name="price" value="{{ old('price') }}" id="insert_products_price"
+                                        class="form-control" required="true" />
+                                    @error('price')<small class="text-danger">{{ $message }}</small>@enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="insert_products_weight">Weight (Gram)</label>
+                                    <input type="number" name="weight" value="{{ old('weight') }}" id="insert_products_weight" class="form-control" required="true" min="0"  />
+                                    @error('weight')<small class="text-danger">{{ $message }}</small>@enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="insert_products_description">Description</label>
+                                    <textarea name="description" id="insert_products_description" class="form-control" cols="30" rows="2"></textarea>
+                                    @error('brand')<small class="text-danger">{{ $message }}</small>@enderror
                                 </div>
                             </div>
-                            @error('image')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="insert_products_name">Name</label>
-                            <input type="text" name="name" value="{{ old('name') }}" id="insert_products_name"
-                                class="form-control" required="true" />
-                            @error('name')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        @if (Request::segment(1) == 'preorder')
-                            <input type="hidden" name="status" value="preorder">
-                            <div class="form-group">
-                                <label for="insert_products_brand">Brand</label>
-                                <div class="form-check form-check-radio pl-0">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="brand" id="insert_products_brand" value="axcelia" required="true">
-                                        <span class="form-check-sign"></span>
-                                        Axcelia
-                                    </label>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span class="d-block text-center font-weight-bold">
+                                            Varian Produk
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="form-check form-check-radio pl-0">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="brand" id="insert_products_brand" value="mooncarla" required="true">
-                                        <span class="form-check-sign"></span>
-                                        Mooncarla
-                                    </label>
+                                <div class="row">
+                                    <div class="col-12 input-varian-container">
+                                        <div class="row input-varian mb-2">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label >Varian Name</label>
+                                                    <input type="text" name="product_varian_name[0]" value=""
+                                                        class="form-control" required="true" />
+                                                    @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Stock</label>
+                                                    <input type="number" name="product_varian_stock[0]" value=""
+                                                        class="form-control" required="true" min="0" />
+                                                    @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                @error('brand')<small class="text-danger">{{ $message }}</small>@enderror
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-outline-primary tambah-varian" type="button">
+                                            Tambah Varian
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        @else
-                            <input type="hidden" name="status" value="available">
-                        @endif
-
-                        <div class="form-group">
-                            <label for="insert_products_price">Price</label>
-                            <input type="text" name="price" value="{{ old('price') }}" id="insert_products_price"
-                                class="form-control" required="true" />
-                            @error('price')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="insert_products_stock">Stock</label>
-                            <input type="number" name="stock" value="{{ old('stock') }}" id="insert_products_stock"
-                                class="form-control" required="true" min="0" />
-                            @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="insert_products_weight">Weight (Gram)</label>
-                            <input type="number" name="weight" value="{{ old('weight') }}" id="insert_products_weight" class="form-control" required="true" min="0"  />
-                             @error('weight')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="insert_products_description">Description</label>
-                            <textarea name="description" id="insert_products_description" class="form-control" cols="30" rows="2"></textarea>
-                             @error('brand')<small class="text-danger">{{ $message }}</small>@enderror
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -238,15 +283,9 @@
                         </div>
                         <div class="form-group">
                             <label for="edit_products_price">Price</label>
-                            <input type="text" name="price" value="{{ old('price') }}" id="edit_products_price"
+                            <input type="number" name="price" value="{{ old('price') }}" id="edit_products_price"
                                 class="form-control" required="true" />
                             @error('price')<small class="text-danger">{{ $message }}</small>@enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_products_stock">Stock</label>
-                            <input type="number" name="stock" value="{{ old('stock') }}" id="edit_products_stock"
-                                class="form-control" required="true" min="0" />
-                            @error('stock')<small class="text-danger">{{ $message }}</small>@enderror
                         </div>
                         <div class="form-group">
                             <label for="edit_products_weight">Weight (Gram)</label>
@@ -281,7 +320,7 @@
                     [10, 25, 50, "All"]
                 ],
                 "columnDefs": [{
-                        "width": "35%",
+                        "width": "30%",
                         "targets": -1
                     },
                     {
@@ -360,15 +399,22 @@
                     $('#formEditProduct [name="name"]').val(data.name);
                     $('#formEditProduct [name="price"]').val(data.price);
                     $('#formEditProduct [name="description"]').val(data.description);
-                    $('#formEditProduct [name="stock"]').val(data.stock);
                     $('#formEditProduct [name="weight"]').val(data.weight);
                     $('#formEditProduct').attr('action', $updateUrl);
-                    $('#formEditProduct .fileinput img').attr('src', '{{ asset('storage/product')}}'+'/'+data.image);
+                    $('#formEditProduct .fileinput img').attr('src', data.image_url);
                     $('#modalEditProduct').modal('show');
                 }
             );
         }
 
+        $('.tambah-varian').on('click', function(){
+            $element_index = $(".input-varian").length;
+            $cloned_element = $(".input-varian").first().clone();
+            $cloned_element.appendTo(".input-varian-container");
+
+            $cloned_element.find('[name="product_varian_name[0]"]').attr("name", "product_varian_name["+$element_index+"]").val("").focus();
+            $cloned_element.find('[name="product_varian_stock[0]"]').attr("name", "product_varian_stock["+$element_index+"]").val("");
+        })
     </script>
 
 

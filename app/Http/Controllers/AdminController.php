@@ -8,6 +8,7 @@ use App\Models\PurchaseDetail;
 use App\Models\ShoppingCart;
 use App\Models\User;
 use App\Models\Admin;
+use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -22,18 +23,16 @@ class AdminController extends Controller
     {
         $data = [
             'total_user_approved' => User::where('status', 'approved')->count(),
+            'total_user_waiting' => User::where('status', 'waiting')->count(),
             'active_product' => Product::where('status', 'available')->count(),
+            'nonactive_product' => Product::where('status', 'unavailable')->count(),
+            'preorder_product' => Product::where('status', 'preorder')->count(),
             'purchase_waiting_payment' => Purchase::where('status', 'waiting_payment')->count(),
             'purchase_waiting_confirmation' => Purchase::where('status', 'waiting_confirmation')->count(),
-            'current_sale' => Product::where('status', 'available')->addSelect(['shopping_cart' => ShoppingCart::selectRaw('sum(quantity) as total')
-                ->whereColumn('product_id', 'products.id')
-                ->groupBy('product_id')
-            ])->addSelect(['purchases_detail' => PurchaseDetail::selectRaw('sum(quantity) as total')
-                ->whereColumn('product_id', 'products.id')
-                ->join('purchases', 'purchase_id', 'purchases.id')
-                ->where('purchases.status',  '!=', 'complete')
-                ->groupBy('product_id')
-            ])->limit(5)->get()
+            'top_sales_this_month' => PurchaseDetail::whereMonth('created_at', Carbon::now()->month)
+                                    ->selectRaw('purchase_details.*, SUM(quantity) as total')
+                                    ->groupBy('product_varian_id')->with('productVarian.product')->orderBy('total', 'DESC')->get(),
+            'income_this_month' => Purchase::whereMonth('created_at', Carbon::now()->month)->get()->sum('total_cost'),
         ];
         return view('dashboard.pages.dashboard', $data);
     }
@@ -97,7 +96,7 @@ class AdminController extends Controller
         ]);
 
         $admin->name = $request->get('name');
-        $admin->email =  $request->get('email'); 
+        $admin->email =  $request->get('email');
 
         if($request->password !== NULL)
         {

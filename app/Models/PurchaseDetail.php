@@ -15,10 +15,26 @@ class PurchaseDetail extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
+    public function productVarian()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(ProductVarian::class);
     }
+
+    /**
+     * Get the purchase that owns the PurchaseDetail
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class);
+    }
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['price_rupiah', 'total_price_rupiah_no_discount', 'total_discount_rupiah'];
 
     /**
      * Get the Price Rupiah
@@ -28,7 +44,7 @@ class PurchaseDetail extends Model
      */
     public function getPriceRupiahAttribute()
     {
-        return 'Rp '.number_format($this->product->price, 0, ".", ".");
+        return 'Rp '.number_format($this->productVarian->price, 0, ".", ".");
     }
     /**
      * Get the total harga
@@ -38,7 +54,7 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceRupiahAttribute()
     {
-        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity)), 0, ".", ".");
+        return 'Rp '.number_format((intval($this->productVarian->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity)), 0, ".", ".");
     }
 
 
@@ -50,7 +66,7 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceAttribute()
     {
-        return (intval($this->product->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity));
+        return (intval($this->productVarian->price) * intval($this->quantity)) - (intval($this->discount) * intval($this->quantity));
     }
 
     /**
@@ -61,7 +77,7 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceNoDiscountAttribute()
     {
-        return (intval($this->product->price) * intval($this->quantity));
+        return (intval($this->productVarian->price) * intval($this->quantity));
     }
 
     /**
@@ -72,7 +88,7 @@ class PurchaseDetail extends Model
      */
     public function getTotalPriceRupiahNoDiscountAttribute()
     {
-        return 'Rp '.number_format((intval($this->product->price) * intval($this->quantity)), 0, ".", ".");
+        return 'Rp '.number_format((intval($this->productVarian->price) * intval($this->quantity)), 0, ".", ".");
     }
 
     /**
@@ -84,5 +100,16 @@ class PurchaseDetail extends Model
     public function getTotalDiscountRupiahAttribute()
     {
         return 'Rp '.number_format((intval($this->discount) * intval($this->quantity)), 0, ".", ".");
+    }
+
+    /**
+     * Get the price
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getPriceAttribute()
+    {
+        return $this->productVarian->price;
     }
 }

@@ -17,14 +17,28 @@ class ShoppingCart extends Model
      */
     protected $guarded = ['id'];
 
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['price'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+
     /**
      * Get the product that owns the ShoppingCart
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
+    public function productVarian()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(ProductVarian::class);
     }
 
     /**
@@ -45,6 +59,17 @@ class ShoppingCart extends Model
      */
     public function getFormattedCreatedDateAttribute()
     {
-        return Carbon::parse($this->created_at)->translatedFormat('D, d F Y');;
+        return Carbon::parse($this->created_at)->translatedFormat('D, d F Y G:i');
+    }
+
+    /**
+     * Get the price
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getPriceAttribute()
+    {
+        return $this->productVarian->price;
     }
 }

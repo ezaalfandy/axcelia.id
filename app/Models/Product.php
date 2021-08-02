@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Product extends Model
 {
     use HasFactory;
@@ -20,12 +20,18 @@ class Product extends Model
      * @var array
      */
 
+     public static function booted(){
+        static::addGlobalScope('latest', function(Builder $builder){
+            $builder->orderBy('created_at', 'DESC');
+        });
+     }
+
      /**
       * The accessors to append to the model's array form.
       *
       * @var array
       */
-     protected $appends = ['image_url', 'price_rupiah'];
+     protected $appends = ['image_url', 'price_rupiah', 'stock'];
     /**
      * Get the Price
      *
@@ -45,9 +51,19 @@ class Product extends Model
      */
     public function getImageUrlAttribute()
     {
-        return secure_asset('storage/product').'/'.$this->image;
+        return asset('storage/products').'/'.$this->image;
     }
 
+    /**
+     * Get the Stock
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getStockAttribute()
+    {
+        return $this->productVarian()->sum('stock');
+    }
     /**
      * Get all of the shoppingCart for the Product
      *
@@ -68,4 +84,16 @@ class Product extends Model
     {
         return $this->hasMany(purchaseDetail::class, 'product_id', 'id');
     }
+
+    /**
+     * Get all of the productVarian for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productVarian()
+    {
+        return $this->hasMany(ProductVarian::class);
+    }
+
+
 }

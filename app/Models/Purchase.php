@@ -15,7 +15,7 @@ class Purchase extends Model
      *
      * @var array
      */
-    protected $appends = ['total_items', 'formatted_total_weight'];
+    protected $appends = ['total_items', 'formatted_total_weight', 'total_cost_rupiah_no_discount', 'total_discount_rupiah', 'full_address'];
 
     /**
      * Get all of the purchase_detail for the Purchase
@@ -70,10 +70,39 @@ class Purchase extends Model
         $total_cost = 0;
         foreach ($this->purchase_details as $item)
         {
-            $total_cost += (intval($item->product->price) * intval($item->quantity));
+            $total_cost += (intval($item->productVarian->price) * intval($item->quantity));
         }
 
         return 'Rp '.number_format($total_cost, 0, ".", ".");
+    }
+
+    /**
+     * Get the Total Cost No Discount No Courier
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalCostRupiahNoDiscountNoCourierAttribute()
+    {
+        $total_cost = 0;
+        foreach ($this->purchase_details as $item)
+        {
+            $total_cost += (intval($item->productVarian->price) * intval($item->quantity));
+        }
+
+        return 'Rp '.number_format($total_cost - $this->courier_cost, 0, ".", ".");
+    }
+
+
+    /**
+     * Get the Total Cost No Discount No Courier
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTotalCostRupiahNoCourierAttribute()
+    {
+        return 'Rp '.number_format($this->total_cost - $this->courier_cost, 0, ".", ".");
     }
 
 
@@ -145,6 +174,17 @@ class Purchase extends Model
      */
     public function getCreatedAtAttribute($created_at)
     {
-        return Carbon::parse($created_at)->translatedFormat('D, d F Y');
+        return Carbon::parse($created_at)->translatedFormat('D, d F Y G:i');
+    }
+
+    /**
+     * Get the Full Address
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getFullAddressAttribute()
+    {
+        return $this->address.' '.$this->subdistrict.', '.$this->city.' - '.$this->province;
     }
 }

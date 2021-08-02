@@ -16,11 +16,10 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('price');
-            $table->integer('stock');
             $table->integer('weight');
+            $table->string('price');
             $table->text('image');
-            $table->enum('brand', ['Axcelia', 'Mooncarla']);
+            $table->enum('brand', ['product-ready', 'barang-unik']);
             $table->text('description')->nullable();
             $table->enum('status', ['available', 'preorder','unavailable'])->default('available');
             $table->timestamps();

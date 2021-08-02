@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->get('password')),
         ]);
 
         event(new Registered($user));
@@ -64,7 +64,7 @@ class RegisteredUserController extends Controller
         User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make("password"),
+            'password' => Hash::make($request->get('password')),
             'phone_number' => $request->get('phone_number'),
         ]);
         return response()->json(['status' => 'success'], 200);
